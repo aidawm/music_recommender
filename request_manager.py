@@ -5,7 +5,7 @@ import os
 import re 
 from database_manager import DB
 from s3_manager import S3
-
+from rabbitmq_manager import AMQP
 
 app = Flask(__name__)   
 
@@ -21,6 +21,9 @@ def add_request(email,file):
 
     s3= S3()
     s3.upload_object(id,file)
+
+    mq = AMQP()
+    mq.publish_message(id=id)
     # pass
 
 
@@ -43,7 +46,7 @@ def success():
             return render_template("Acknowledgement.html", name = file.filename)   
         else:
             print("error")
-            
+
         
     
     
