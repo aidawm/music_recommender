@@ -1,5 +1,6 @@
-import pika
+import pika, sys, os
 import json 
+import music_recognizer
 
 class AMQP: 
     def __init__(self) -> None:
@@ -22,3 +23,14 @@ class AMQP:
                       routing_key=self.configs["queue_name"],
                       body=str(id))
         print(f" [x] Sent 'id = {id}'")
+
+
+    def recieve_message(self):
+        def callback(ch, method, properties, body):
+            music_recognizer.notify(body)
+
+
+        self.channel.basic_consume(queue=self.configs["queue_name"], on_message_callback=callback, auto_ack=True)
+
+        print(' [*] Waiting for messages. To exit press CTRL+C')
+        self.channel.start_consuming()

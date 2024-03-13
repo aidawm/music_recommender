@@ -2,6 +2,7 @@ import boto3
 from botocore.exceptions import ClientError
 import json
 from fileinput import filename 
+import os
 
 class S3:
     def __init__(self) -> None:
@@ -33,5 +34,19 @@ class S3:
         id = str(id) + ".mp3"
         file.filename = id
         self.bucket.Object(file.filename).put(Body=file.read())
+
+    def get_object(self,id):
+        object_name = str(id)+".mp3"
+        print(object_name)
+        self.bucket.download_file(
+           object_name,
+           object_name
+       )
+        
+    def delete_object_from_local(self,id):
+        object_name = str(id)+".mp3"
+        os.remove(object_name) 
+
+
 
    

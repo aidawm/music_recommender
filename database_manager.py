@@ -50,20 +50,50 @@ class DB:
         
         return myresult[0][0]
 
-    def show_requests (self):
+    def show_ready_requests (self):
         mycursor = self.mydb.cursor()
 
-        mycursor.execute("SELECT * FROM requests")
+        mycursor.execute("SELECT * FROM requests where status = 'ready'")
 
         myresult = mycursor.fetchall()
 
-        for x in myresult:
-          print(x)
+        return myresult
+
+
+    def set_email (self,id,email):
+        mycursor = self.mydb.cursor()
+    
+        sql = f"UPDATE requests SET email = %s WHERE id = %s"
+        val = [email,id]
+        print(sql)
+
+        mycursor.execute(sql,val)
+
+        self.mydb.commit()
+
+    def set_songID (self,id,songID):
+        mycursor = self.mydb.cursor()
+    
+        sql = f"UPDATE requests SET songID = %s WHERE id = %s"
+        val = [songID,id]
+        print(sql)
+
+        mycursor.execute(sql,val)
+
+        self.mydb.commit()
+
+
+    def set_status(self,id,s):
+        mycursor = self.mydb.cursor()
+    
+        sql = f"UPDATE requests SET status = %s WHERE id = %s"
+        val = [s,id]
+
+        mycursor.execute(sql,val)
+
+        self.mydb.commit()
 
 if __name__ == '__main__': 
     db = DB()
-    db.show_tables()
-
-    db.new_request("aida.mobli@aut.ac.ir")
-
-    db.show_requests()
+    db.set_email(1,"aida.mobli@aut.ac.ir")
+    
